@@ -19,8 +19,8 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             data = self.request.query
 
-        log.info("[{}]{}://{}{}\n{}\n".format(
-            method, self.request.protocol, self.request.host, self.request.path, data))
+        log.info("[{}]->[{}]{}://{}{}\n{}\n".format(
+            self.request.remote_ip, method, self.request.protocol, self.request.host, self.request.path, data))
 
         file_path = "{}{}{}.json".format(JSON_DIR, method.lower(), self.request.path.replace('/', '.'))
         if not os.path.exists(file_path):

@@ -22,7 +22,7 @@ class BaseHandler(tornado.web.RequestHandler):
         log.info("[{}]{}://{}{}\n{}\n".format(
             method, self.request.protocol, self.request.host, self.request.path, data))
 
-        file_path = "{}{}:{}".format(JSON_DIR, method.lower(), self.request.path.replace('/', '.'))
+        file_path = "{}{}{}.json".format(JSON_DIR, method.lower(), self.request.path.replace('/', '.'))
         if not os.path.exists(file_path):
             file_path = ""
         else:

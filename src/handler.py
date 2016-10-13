@@ -15,7 +15,11 @@ class BaseHandler(tornado.web.RequestHandler):
     def prepare(self):
         method = self.request.method
         if method in ("POST", "DELETE"):
-            data = json.dumps(json.loads(self.request.body), indent=2)
+            try:
+                data = json.dumps(json.loads(self.request.body), indent=2)
+            except Exception, e:
+                log.info('load req data from body failed: {}'.format(e))
+                data = self.request.arguments
         else:
             data = self.request.query
 

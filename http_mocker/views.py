@@ -3,21 +3,18 @@ import json
 import logging as log
 import os
 
-import tornado.web
+from http_mocker.utils import BaseHandler
 
 JSON_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../json/')
 
 
-class BaseHandler(tornado.web.RequestHandler):
-    def data_received(self, chunk):
-        pass
-
+class ResponseHandler(BaseHandler):
     def prepare(self):
         method = self.request.method
         if method in ("POST", "DELETE"):
             try:
                 data = json.dumps(json.loads(self.request.body), indent=2)
-            except Exception, e:
+            except Exception as e:
                 log.info('load req data from body failed: {}'.format(e))
                 data = self.request.arguments
         else:
@@ -38,22 +35,8 @@ class BaseHandler(tornado.web.RequestHandler):
             self.write({'error': 'json file not found'})
             self.write_error(404)
 
-    def write_200(self, data):
-        self.set_status(200)
-        self.add_headers()
-        self.write(data)
-        self.finish()
 
-    def options(self, *args, **kwargs):
-        self.add_headers()
-
-    def add_headers(self):
-        self.add_header("Access-Control-Allow-Origin", "*")
-        self.add_header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-        self.add_header("Access-Control-Allow-Credentials", "true")
-
-
-class MainHandler(BaseHandler):
+class MainHandler(ResponseHandler):
     def get(self, path):
         pass
 
@@ -64,4 +47,10 @@ class MainHandler(BaseHandler):
         pass
 
     def delete(self, path):
+        pass
+
+    def options(self, path):
+        pass
+
+    def head(self, path):
         pass
